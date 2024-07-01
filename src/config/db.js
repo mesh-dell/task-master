@@ -17,13 +17,13 @@ client.query("SELECT * FROM todos", (err, res) => {
 
 // Add new todo item
 
-async function addItem(content) {
+function addItem(content) {
   const query = "INSERT INTO todos (content) VALUES($1)";
   const values = [content];
 
   client
     .query(query, values)
-    .then((res) => {
+    .then(() => {
       console.log("Todo inserted succesfully");
     })
     .catch((err) => {
@@ -31,5 +31,55 @@ async function addItem(content) {
     });
 }
 
+function listItems(id, selector) {
+  const query = "SELECT * FROM todos WHERE id = $1 AND status = $2";
+  switch (selector) {
+    case "all": {
+      client
+        .query(query, [id, "all"])
+        .then((res) => {
+          const rows = res.rows();
+          rows.forEach((row) => {
+            console.log(row);
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      break;
+    }
+    case "pending": {
+      client
+        .query(query, [id, "pending"])
+        .then((res) => {
+          const rows = res.rows();
+          rows.forEach((row) => {
+            console.log(row);
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      break;
+    }
+    case "done": {
+      client
+        .query(query, [id, "done"])
+        .then((res) => {
+          const rows = res.rows();
+          rows.forEach((row) => {
+            console.log(row);
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      break;
+    }
+    default: {
+      console.error("Error: Used an invalid selector");
+    }
+  }
+}
 
-module.exports = { addItem };
+module.exports = { addItem, listItems };
