@@ -93,4 +93,18 @@ function doneItem(id) {
       console.error(err);
     });
 }
-module.exports = { addItem, listItems, doneItem };
+
+function deleteItem(id) {
+  const query = "DELETE FROM todos WHERE id = $1";
+
+  client
+    .query(query, [id])
+    .then(() => {
+      console.log(`Deleted item ${id}`);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+module.exports = { addItem, listItems, doneItem, deleteItem };
