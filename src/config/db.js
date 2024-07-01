@@ -82,4 +82,15 @@ function listItems(id, selector) {
   }
 }
 
-module.exports = { addItem, listItems };
+function doneItem(id) {
+  const query = "UPDATE todos SET status = done WHERE id = $1";
+  client
+    .query(query, [id])
+    .then(() => {
+      console.log(`Set item ${id} as done`);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+module.exports = { addItem, listItems, doneItem };
