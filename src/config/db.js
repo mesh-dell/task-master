@@ -6,15 +6,6 @@ const client = new Client();
 
 client.connect();
 
-client.query("SELECT * FROM todos", (err, res) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(res.rows);
-  }
-  client.end();
-});
-
 // Add new todo item
 
 function addItem(content) {
@@ -25,6 +16,7 @@ function addItem(content) {
     .query(query, values)
     .then(() => {
       console.log("Todo inserted succesfully");
+      client.end();
     })
     .catch((err) => {
       console.error(err);
@@ -42,6 +34,7 @@ function listItems(id, selector) {
           rows.forEach((row) => {
             console.log(row);
           });
+          client.end();
         })
         .catch((err) => {
           console.error(err);
@@ -56,6 +49,7 @@ function listItems(id, selector) {
           rows.forEach((row) => {
             console.log(row);
           });
+          client.end();
         })
         .catch((err) => {
           console.error(err);
@@ -70,6 +64,7 @@ function listItems(id, selector) {
           rows.forEach((row) => {
             console.log(row);
           });
+          client.end();
         })
         .catch((err) => {
           console.error(err);
@@ -88,6 +83,7 @@ function doneItem(id) {
     .query(query, [id])
     .then(() => {
       console.log(`Set item ${id} as done`);
+      client.end();
     })
     .catch((err) => {
       console.error(err);
@@ -101,6 +97,7 @@ function deleteItem(id) {
     .query(query, [id])
     .then(() => {
       console.log(`Deleted item ${id}`);
+      client.end();
     })
     .catch((err) => {
       console.error(err);
