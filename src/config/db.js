@@ -14,3 +14,22 @@ client.query("SELECT * FROM todos", (err, res) => {
   }
   client.end();
 });
+
+// Add new todo item
+
+async function addItem(content) {
+  const query = "INSERT INTO todos (content) VALUES($1)";
+  const values = [content];
+
+  client
+    .query(query, values)
+    .then((res) => {
+      console.log("Todo inserted succesfully");
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+
+module.exports = { addItem };
