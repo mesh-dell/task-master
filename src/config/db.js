@@ -22,55 +22,29 @@ async function addItem(content) {
   console.log(`Todo inserted successfully with id ${result[0].id}`);
 }
 
-function listItems(id, selector) {
-  const query = "SELECT * FROM todos WHERE id = $1 AND status = $2";
+async function listItems(selector) {
+  const status = ["all", "pending", "done"];
+  const query = "SELECT * FROM todos WHERE status = $1";
   switch (selector) {
-    case "all": {
-      client
-        .query(query, [id, "all"])
-        .then((res) => {
-          const rows = res.rows();
-          rows.forEach((row) => {
-            console.log(row);
-          });
-          client.end();
-        })
-        .catch((err) => {
-          console.error(err);
-          client.end();
-        });
+    case status[0]: {
+      const result = await executeQuery(query, [status[0]]);
+      result.forEach((item) => {
+        console.log(item);
+      });
       break;
     }
-    case "pending": {
-      client
-        .query(query, [id, "pending"])
-        .then((res) => {
-          const rows = res.rows();
-          rows.forEach((row) => {
-            console.log(row);
-          });
-          client.end();
-        })
-        .catch((err) => {
-          console.error(err);
-          client.end();
-        });
+    case status[1]: {
+      const result = await executeQuery(query, [status[1]]);
+      result.forEach((item) => {
+        console.log(item);
+      });
       break;
     }
-    case "done": {
-      client
-        .query(query, [id, "done"])
-        .then((res) => {
-          const rows = res.rows();
-          rows.forEach((row) => {
-            console.log(row);
-          });
-          client.end();
-        })
-        .catch((err) => {
-          console.error(err);
-          client.end();
-        });
+    case status[2]: {
+      const result = await executeQuery(query, [status[2]]);
+      result.forEach((item) => {
+        console.log(item);
+      });
       break;
     }
     default: {
