@@ -60,19 +60,11 @@ async function doneItem(id) {
   console.log(`Set item ${id} as done`);
 }
 
-function deleteItem(id) {
+async function deleteItem(id) {
   const query = "DELETE FROM todos WHERE id = $1";
 
-  client
-    .query(query, [id])
-    .then(() => {
-      console.log(`Deleted item ${id}`);
-      client.end();
-    })
-    .catch((err) => {
-      console.error(err);
-      client.end();
-    });
+  await executeQuery(query, [id]);
+  console.log(`Deleted item ${id}`);
 }
 
 module.exports = { addItem, listItems, doneItem, deleteItem };
