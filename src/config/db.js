@@ -1,26 +1,25 @@
 require("dotenv").config();
-const pg = require("pg");
-const { Client } = pg;
+const { Pool } = require("pg");
 
-const client = new Client();
+const pool = new Pool();
 
-client.connect();
+async function executeQuery(query, params = []) {
+  const client = await pool.connect();
+
+  try {
+    const result = await client.query(query, params);
+    return result.rows;
+  } finally {
+    client.release();
+  }
+}
 
 // Add new todo item
 
-function addItem(content) {
-  const query = "INSERT INTO todos (content) VALUES($1)";
-  const values = [content];
-
-  client
-    .query(query, values)
-    .then(() => {
-      console.log("Todo inserted succesfully");
-      client.end();
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+async function addItem(content) {
+  const query = "INSERT INTO todos (content) VALUES($1) RETURNING id";
+  const result = await executeQuery(query, [content]);
+  console.log(`Todo inserted successfully with id ${result[0].id}`);
 }
 
 function listItems(id, selector) {
@@ -38,6 +37,7 @@ function listItems(id, selector) {
         })
         .catch((err) => {
           console.error(err);
+          client.end();
         });
       break;
     }
@@ -53,6 +53,7 @@ function listItems(id, selector) {
         })
         .catch((err) => {
           console.error(err);
+          client.end();
         });
       break;
     }
@@ -68,11 +69,13 @@ function listItems(id, selector) {
         })
         .catch((err) => {
           console.error(err);
+          client.end();
         });
       break;
     }
     default: {
       console.error("Error: Used an invalid selector");
+      client.end();
     }
   }
 }
@@ -87,6 +90,7 @@ function doneItem(id) {
     })
     .catch((err) => {
       console.error(err);
+      client.end();
     });
 }
 
@@ -101,6 +105,7 @@ function deleteItem(id) {
     })
     .catch((err) => {
       console.error(err);
+      client.end();
     });
 }
 
