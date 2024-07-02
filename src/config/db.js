@@ -28,19 +28,19 @@ async function listItems(selector) {
   let query = "SELECT * FROM todos";
   const params = [];
 
+  if (!status.includes(selector.toLowerCase())) {
+    console.error("Error: Used an invalid selector");
+  }
+
   if (selector !== "all") {
     query += " WHERE status = $1";
     params.push(selector);
   }
 
-  try {
-    const result = await executeQuery(query, params);
-    result.forEach((item) => {
-      console.log(item);
-    });
-  } catch (error) {
-    console.error("Error: Used an invalid selector", error);
-  }
+  const result = await executeQuery(query, params);
+  result.forEach((item) => {
+    console.log(item);
+  });
 }
 
 async function doneItem(id) {
@@ -58,6 +58,6 @@ async function deleteItem(id) {
 
 module.exports = { addItem, listItems, doneItem, deleteItem };
 
-listItems("all").then(() => {
+listItems("pego").then(() => {
   console.log("DONE");
 });
