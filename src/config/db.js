@@ -44,8 +44,8 @@ async function listItems(selector) {
 }
 
 async function doneItem(id) {
-  const query = "UPDATE todos SET status = done WHERE id = $1";
-  await executeQuery(query, [id]);
+  const query = "UPDATE todos SET status = $1 WHERE id = $2";
+  await executeQuery(query, ["done", id]);
   console.log(`Set item ${id} as done`);
 }
 
@@ -58,6 +58,5 @@ async function deleteItem(id) {
 
 module.exports = { addItem, listItems, doneItem, deleteItem };
 
-listItems("pego").then(() => {
-  console.log("DONE");
-});
+doneItem(1);
+listItems("all");
