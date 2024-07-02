@@ -54,18 +54,10 @@ async function listItems(selector) {
   }
 }
 
-function doneItem(id) {
+async function doneItem(id) {
   const query = "UPDATE todos SET status = done WHERE id = $1";
-  client
-    .query(query, [id])
-    .then(() => {
-      console.log(`Set item ${id} as done`);
-      client.end();
-    })
-    .catch((err) => {
-      console.error(err);
-      client.end();
-    });
+  await executeQuery(query, [id]);
+  console.log(`Set item ${id} as done`);
 }
 
 function deleteItem(id) {
