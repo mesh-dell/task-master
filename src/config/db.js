@@ -32,15 +32,13 @@ async function listItems(selector) {
     console.error("Error: Used an invalid selector");
   }
 
-  if (selector !== "all") {
+  if (selector.toLowerCase() !== "all") {
     query += " WHERE status = $1";
-    params.push(selector);
+    params.push(selector.toLowerCase());
   }
 
   const result = await executeQuery(query, params);
-  result.forEach((item) => {
-    console.log(item);
-  });
+  return result;
 }
 
 async function doneItem(id) {
@@ -57,6 +55,3 @@ async function deleteItem(id) {
 }
 
 module.exports = { addItem, listItems, doneItem, deleteItem };
-
-doneItem(1);
-listItems("all");
