@@ -1,4 +1,5 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 const { Pool } = require("pg");
 
 const pool = new Pool();
@@ -24,33 +25,21 @@ async function addItem(content) {
 
 async function listItems(selector) {
   const status = ["all", "pending", "done"];
-  const query = "SELECT * FROM todos WHERE status = $1";
-  switch (selector) {
-    case status[0]: {
-      const result = await executeQuery(query, [status[0]]);
-      result.forEach((item) => {
-        console.log(item);
-      });
-      break;
-    }
-    case status[1]: {
-      const result = await executeQuery(query, [status[1]]);
-      result.forEach((item) => {
-        console.log(item);
-      });
-      break;
-    }
-    case status[2]: {
-      const result = await executeQuery(query, [status[2]]);
-      result.forEach((item) => {
-        console.log(item);
-      });
-      break;
-    }
-    default: {
-      console.error("Error: Used an invalid selector");
-      client.end();
-    }
+  let query = "SELECT * FROM todos";
+  const params = [];
+
+  if (selector !== "all") {
+    query += " WHERE status = $1";
+    params.push(selector);
+  }
+
+  try {
+    const result = await executeQuery(query, params);
+    result.forEach((item) => {
+      console.log(item);
+    });
+  } catch (error) {
+    console.error("Error: Used an invalid selector", error);
   }
 }
 
@@ -68,3 +57,7 @@ async function deleteItem(id) {
 }
 
 module.exports = { addItem, listItems, doneItem, deleteItem };
+
+listItems("all").then(() => {
+  console.log("DONE");
+});
