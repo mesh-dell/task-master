@@ -1,4 +1,5 @@
 const { program } = require("commander");
+const { addItem, listItems, doneItem, deleteItem } = require("./config/db");
 
 program
   .name("task-master")
@@ -11,7 +12,25 @@ program
   .option("--done <id>", "to update a todo item")
   .option("--delete <id>", "delete a todo item")
   .action((options) => {
-    console.log(options);
+    if (options.new) {
+      addItem(options.new);
+    }
+
+    if (options.list) {
+      listItems(options.list).then((res) => {
+        res.forEach((item) => {
+          console.log(item);
+        });
+      });
+    }
+
+    if (options.done) {
+      doneItem(options.done);
+    }
+
+    if (options.delete) {
+      deleteItem(options.delete);
+    }
   });
 
 program.parse();
