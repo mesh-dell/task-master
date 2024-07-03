@@ -17,32 +17,31 @@ program
   .option("--list [all|pending|done]", "list the todo items")
   .option("--done <id>", "to update a todo item")
   .option("--delete <id>", "delete a todo item")
-  .action((options) => {
+  .action(async (options) => {
     if (options.new) {
-      addItem(options.new);
+      await addItem(options.new);
     }
 
     if (options.list) {
-      listItems(options.list).then((res) => {
-        res.forEach((item) => {
-          table.push([
-            item.id,
-            item.content,
-            item.status,
-            item.created_at,
-            item.updated_at,
-          ]);
-        });
+      const res = await listItems(options.list);
+      res.forEach((item) => {
+        table.push([
+          item.id,
+          item.content,
+          item.status,
+          item.created_at.toLocaleString(),
+          item.updated_at.toLocaleString(),
+        ]);
       });
       console.log(table.length > 0 ? table.toString() : "There are no tasks");
     }
 
     if (options.done) {
-      doneItem(options.done);
+      await doneItem(options.done);
     }
 
     if (options.delete) {
-      deleteItem(options.delete);
+      await deleteItem(options.delete);
     }
   });
 
