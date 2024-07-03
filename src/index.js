@@ -1,5 +1,11 @@
 const { program } = require("commander");
 const { addItem, listItems, doneItem, deleteItem } = require("./config/db");
+const Table = require("cli-table3");
+
+const table = new Table({
+  head: ["ID", "Content", "Status", "Created At", "Updated at"],
+  colWidths: [5, 30, 10, 25, 25],
+});
 
 program
   .name("task-master")
@@ -19,9 +25,16 @@ program
     if (options.list) {
       listItems(options.list).then((res) => {
         res.forEach((item) => {
-          console.log(item);
+          table.push([
+            item.id,
+            item.content,
+            item.status,
+            item.created_at,
+            item.updated_at,
+          ]);
         });
       });
+      console.log(table.length > 0 ? table.toString() : "There are no tasks");
     }
 
     if (options.done) {
