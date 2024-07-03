@@ -29,7 +29,7 @@ Task Master is a simple command-line interface (CLI) application that allows use
    ```
 
 3. **Setup environment:**
-   - Create a `.env` file in the root directory and add necessary environment variables (if applicable).
+   - Create a `.env` file in the root directory and add necessary environment variables.
 
 ### Usage
 
