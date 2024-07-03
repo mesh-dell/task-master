@@ -11,7 +11,7 @@ async function executeQuery(query, params = []) {
     const result = await client.query(query, params);
     return result.rows;
   } finally {
-    client.release();
+    client.end();
   }
 }
 
@@ -43,7 +43,7 @@ async function listItems(selector) {
 
 async function doneItem(id) {
   const query =
-    "UPDATE todos SET status = $1, updated_at = NOW() WHERE id = $2";
+    "UPDATE todos SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING id";
   const result = await executeQuery(query, ["done", id]);
   console.log(
     result.length > 0 ? `Set item ${id} as done` : `No item found with id ${id}`
@@ -51,7 +51,7 @@ async function doneItem(id) {
 }
 
 async function deleteItem(id) {
-  const query = "DELETE FROM todos WHERE id = $1";
+  const query = "DELETE FROM todos WHERE id = $1 RETURNING id";
 
   const result = await executeQuery(query, [id]);
 
